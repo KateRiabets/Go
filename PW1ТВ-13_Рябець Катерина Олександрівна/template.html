@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        label {
+            color: #ed95ad;
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #ed95ad;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff4081;
+        }
+        pre {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+    </style>
+    <script>
+        function switchTask(task) {
+            document.getElementById('task1').style.display = task === 1 ? 'block' : 'none';
+            document.getElementById('task2').style.display = task === 2 ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Теплотехнічний Калькулятор</h1>
+    <button onclick="switchTask(1)">Завдання 1</button>
+    <button onclick="switchTask(2)">Завдання 2</button>
+    <div id="task1" style="display: block;">
+        <form action="/calculate1" method="POST">
+            <label>Hp: <input type="text" name="hp" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Cp: <input type="text" name="cp" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Sp: <input type="text" name="sp" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Np: <input type="text" name="np" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Op: <input type="text" name="op" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Wp: <input type="text" name="wp" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Ap: <input type="text" name="ap" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <button type="submit">Розрахувати</button>
+        </form>
+
+    </div>
+    <div id="task2" style="display: none;">
+        <form action="/calculate2" method="POST">
+            <label>Cg: <input type="text" name="cg" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Hg: <input type="text" name="hg" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Og: <input type="text" name="og" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Sg: <input type="text" name="sg" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Qi: <input type="text" name="qi" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Vg: <input type="text" name="vg" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Wg: <input type="text" name="wg" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <label>Ag: <input type="text" name="ag" pattern="[0-9]+(\.[0-9]+)?" required></label>
+            <button type="submit">Розрахувати</button>
+        </form>
+
+    </div>
+    <pre id="result">{{.Result}}</pre>
+</div>
+</body>
+</html>
