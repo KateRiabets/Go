@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Калькулятор Викидів Палива</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    label {
+      color: #ed95ad;
+      display: block;
+      margin-top: 10px;
+    }
+    input, select{
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      background: #ed95ad;
+      color: white;
+      border: none;
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ff4081;
+    }
+    pre {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: left;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Калькулятор викидів палива</h1>
+  <form action="/calculate" method="POST">
+    <label for="mass">Маса палива (кг):</label>
+    <input type="text" name="mass" id="mass" pattern="[0-9]+(\.[0-9]+)?" required value="{{.Mass}}">
+
+    <label for="fuelType">Тип палива:</label>
+    <select name="fuelType" id="fuelType" required>
+      <option value="">Оберіть тип палива</option>
+      <option value="Донецьке газове вугілля марки ГР" {{if eq .FuelType "Донецьке газове вугілля марки ГР"}}selected{{end}}>Донецьке газове вугілля марки ГР</option>
+      <option value="Високосірчистий мазут марки 40" {{if eq .FuelType "Високосірчистий мазут марки 40"}}selected{{end}}>Високосірчистий мазут марки 40</option>
+      <option value="Природний газ із газопроводу Уренгой-Ужгород" {{if eq .FuelType "Природний газ із газопроводу Уренгой-Ужгород"}}selected{{end}}>Природний газ із газопроводу Уренгой-Ужгород</option>
+    </select>
+
+    <button type="submit">Розрахувати</button>
+  </form>
+
+  <pre id="result">{{.Result}}</pre>
+
+</div>
+</body>
+</html>
