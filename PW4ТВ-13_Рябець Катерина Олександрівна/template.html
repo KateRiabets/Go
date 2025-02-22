@@ -1,0 +1,181 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Розрахунок кабелів (Завдання 1-3)</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            color: #ed95ad;
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #ed95ad;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff4081;
+        }
+        pre {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        .block {
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .result-block {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Розрахунок кабелів</h1>
+
+    <!-- БЛОК (Завдання 1-2) -->
+    <div class="block">
+        <h2>Завдання 1-2</h2>
+        <form action="/calculate12" method="POST">
+            <label>Струм короткого замикання (Iк, кА):</label>
+            <input type="text" name="currentIk" required value="{{.CurrentIk}}">
+
+            <label>Фіктивний час (tф, c):</label>
+            <input type="text" name="timeTf" required value="{{.TimeTf}}">
+
+            <label>Розрахункове навантаження (Sм, кВА):</label>
+            <input type="text" name="powerSm" required value="{{.PowerSm}}">
+
+            <label>Напруга (кВ):</label>
+            <input type="text" name="voltage" required value="{{.Voltage}}">
+
+            <label>Кількість годин (Tм):</label>
+            <input type="text" name="timeTm" required value="{{.TimeTm}}">
+
+            <label>Потужність КЗ (MВА):</label>
+            <input type="text" name="powerKZ" required value="{{.PowerKZ}}">
+
+            <button type="submit">Розрахувати (Завдання 1-2)</button>
+        </form>
+        <!-- Виведення результату для Завдань 1-2, якщо він є -->
+        {{if .Result12}}
+        <div class="result-block">
+            <h3>Результат (Завдання 1-2)</h3>
+            <pre>{{.Result12}}</pre>
+        </div>
+        {{end}}
+    </div>
+
+    <!-- БЛОК (Завдання 3) -->
+    <div class="block">
+        <h2>Завдання 3</h2>
+        <form action="/calculate3" method="POST">
+            <label>Uк.max (%):</label>
+            <input type="text" name="uKmax" required value="{{.UKmax}}">
+
+            <label>Uв.н (кВ):</label>
+            <input type="text" name="uVn" required value="{{.UVn}}">
+
+            <label>Uн.н (кВ):</label>
+            <input type="text" name="uNn" required value="{{.UNn}}">
+
+            <label>Sном.т (кВА):</label>
+            <input type="text" name="sNomT" required value="{{.SNomT}}">
+
+            <label>Rс.н (Ом):</label>
+            <input type="text" name="rc_n" required value="{{.RcN}}">
+
+            <label>Xс.н (Ом):</label>
+            <input type="text" name="xc_n" required value="{{.XcN}}">
+
+            <label>Rс.min (Ом):</label>
+            <input type="text" name="rc_min" required value="{{.RcMin}}">
+
+            <label>Xс.min (Ом):</label>
+            <input type="text" name="xc_min" required value="{{.XcMin}}">
+
+            <label>R0 (Ом/км):</label>
+            <input type="text" name="r0" required value="{{.R0}}">
+
+            <label>X0 (Ом/км):</label>
+            <input type="text" name="x0" required value="{{.X0}}">
+
+            <label>Ділянка 1-2 (км):</label>
+            <input type="text" name="section1_2" required value="{{.Section1_2}}">
+
+            <label>Ділянка 2-3 (км):</label>
+            <input type="text" name="section2_3" required value="{{.Section2_3}}">
+
+            <label>Ділянка 4-5 (км):</label>
+            <input type="text" name="section4_5" required value="{{.Section4_5}}">
+
+            <label>Ділянка 5-6 (км):</label>
+            <input type="text" name="section5_6" required value="{{.Section5_6}}">
+
+            <label>Ділянка 6-7 (км):</label>
+            <input type="text" name="section6_7" required value="{{.Section6_7}}">
+
+            <label>Ділянка 7-8 (км):</label>
+            <input type="text" name="section7_8" required value="{{.Section7_8}}">
+
+            <label>Ділянка 8-9 (км):</label>
+            <input type="text" name="section8_9" required value="{{.Section8_9}}">
+
+            <label>Ділянка 9-10 (км):</label>
+            <input type="text" name="section9_10" required value="{{.Section9_10}}">
+
+            <button type="submit">Розрахувати (Завдання 3)</button>
+        </form>
+
+        <!-- Виведення результату для Завдання 3, якщо він є -->
+        {{if .Result3}}
+        <div class="result-block">
+            <h3>Результат (Завдання 3)</h3>
+            <pre>{{.Result3}}</pre>
+        </div>
+        {{end}}
+    </div>
+</div>
+</body>
+</html>
