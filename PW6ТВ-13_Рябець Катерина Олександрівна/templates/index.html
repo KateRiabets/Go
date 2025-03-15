@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Розрахунок електроспоживання</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f4f4f4; }
+    input { width: 100px; padding: 5px; }
+    button { margin-top: 10px; padding: 10px 15px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+<h1>Розрахунок електроспоживання</h1>
+
+<form action="/" method="post">
+  <h2>Параметри обладнання</h2>
+  <table>
+    <tr>
+      <th>Назва</th>
+      <th>η</th>
+      <th>cos φ</th>
+      <th>Uн (кВ)</th>
+      <th>n</th>
+      <th>Pн (кВт)</th>
+      <th>КВ</th>
+      <th>tg φ</th>
+    </tr>
+    {{range .EquipmentList}}
+    <tr>
+      <td>{{.Name}}</td>
+      <td><input type="text" name="eta_{{.Name}}" value="{{.Eta}}"></td>
+      <td><input type="text" name="cosphi_{{.Name}}" value="{{.CosPhi}}"></td>
+      <td><input type="text" name="uh_{{.Name}}" value="{{.UH}}"></td>
+      <td><input type="text" name="n_{{.Name}}" value="{{.N}}"></td>
+      <td><input type="text" name="ph_{{.Name}}" value="{{.PH}}"></td>
+      <td><input type="text" name="kv_{{.Name}}" value="{{.KV}}"></td>
+      <td><input type="text" name="tgphi_{{.Name}}" value="{{.TgPhi}}"></td>
+    </tr>
+    {{end}}
+  </table>
+
+  
+
+  <button type="submit">Розрахувати</button>
+</form>
+
+<h2>Результати розрахунків</h2>
+<table>
+  <tr>
+    <th>Назва</th>
+    <th>n * Pн</th>
+    <th>n * Pн * kв</th>
+    <th>n * Pн * kв * tg φ</th>
+    <th>Iп (А)</th>
+  </tr>
+  {{range $name, $result := .Results}}
+  <tr>
+    <td>{{$name}}</td>
+    <td>{{printf "%.2f" $result.TotalPower}}</td>
+    <td>{{printf "%.2f" $result.WeightedPower}}</td>
+    <td>{{printf "%.2f" $result.WeightedPowerTg}}</td>
+    <td>{{printf "%.2f" $result.Current}}</td>
+  </tr>
+  {{end}}
+</table>
+
+<h3>Загальні результати</h3>
+<p><strong>Груповий коефіцієнт використання:</strong> {{printf "%.4f" .GroupKv}}</p>
+<p><strong>Ефективна кількість:</strong> {{printf "%.4f" .NE}}</p>
+<p><strong>Розрахунковий коефіцієнт активної потужності:</strong> {{printf "%.4f" .KR}}</p>
+<p><strong>Розрахункове активне навантаження:</strong> {{printf "%.4f" .Pp}}</p>
+<p><strong>Розрахункове реактивне навантаження:</strong> {{printf "%.4f" .Qp}}</p>
+<p><strong>Повна потужність:</strong> {{printf "%.4f" .Sp}}</p>
+<p><strong>Розрахунковий груповий струм:</strong> {{printf "%.4f" .Ip}}</p>
+
+<h3>Розрахунки для всього цеху</h3>
+<p><strong>Коефіцієнт використання цеху в цілому:</strong> {{printf "%.4f" .GroupKvWorkshop}}</p>
+<p><strong>Ефективна кількість ЕП цеху в цілому:</strong> {{printf "%.4f" .NEWorkshop}}</p>
+<p><strong>Розрахунковий коефіцієнт активної потужності:</strong> {{printf "%.1f" .KRWorkshop}}</p>
+<p><strong>Розрахункове активне навантаження на шинах 0,38 кВ:</strong> {{printf "%.1f" .PpWorkshop}}</p>
+<p><strong>Розрахункове реактивне навантаження на шинах 0,38 кВ:</strong> {{printf "%.1f" .QpWorkshop}}</p>
+<p><strong>Повна потужність на шинах 0,38 кВ:</strong> {{printf "%.1f" .SpWorkshop}}</p>
+<p><strong>Розрахунковий груповий струм на шинах 0,38 кВ:</strong> {{printf "%.2f" .IpWorkshop}}</p>
+
+</body>
+</html>
