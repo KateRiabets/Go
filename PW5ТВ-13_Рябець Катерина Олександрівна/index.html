@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Порівняння одноколової та двоколової системи</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        select, input, button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #ed95ad;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff4081;
+        }
+        .hidden {
+            display: none;
+        }
+        .result-block {
+            margin-top: 20px;
+            text-align: left;
+            word-wrap: break-word;
+            white-space: normal;
+            overflow-wrap: break-word;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Порівняння одноколової та двоколової системи</h2>
+
+    <button id="addEquipment">Додати обладнання</button>
+    <div id="equipmentSlots"></div>
+
+    <div id="leverSelection">
+        <h3>Виберіть перемикач для двоколовоъ системи</h3>
+        <select id="leverSelect">
+            <option value="">Оберіть перемикач</option>
+        </select>
+    </div>
+
+    <button id="calculate">Розрахувати</button>
+
+    <h3>Результати</h3>
+    <div id="result" class="result-block"></div>
+</div>
+
+<script>
+    const equipmentData = [
+        { id: 1, name: "ПЛ-110 кВ", requiresLength: true, requiresQuantity: false },
+        { id: 2, name: "ПЛ-35 кВ", requiresLength: true, requiresQuantity: false },
+        { id: 3, name: "ПЛ-10 кВ", requiresLength: true, requiresQuantity: false },
+        { id: 4, name: "КЛ-10 кВ (траншея)", requiresLength: true, requiresQuantity: false },
+        { id: 5, name: "КЛ-10 кВ (кабельний канал)", requiresLength: true, requiresQuantity: false },
+        { id: 6, name: "Збірні шини 10 кВ", requiresLength: false, requiresQuantity: true },
+        { id: 7, name: "Т-110 кВ", requiresLength: false, requiresQuantity: false },
+        { id: 8, name: "Т-35 кВ", requiresLength: false, requiresQuantity: false },
+        { id: 9, name: "Т-10 кВ (кабельна мережа)", requiresLength: false, requiresQuantity: false },
+        { id: 10, name: "Т-10 кВ (повітряна мережа)", requiresLength: false, requiresQuantity: false },
+        { id: 11, name: "В-110 кВ (елегазовий)", requiresLength: false, requiresQuantity: false },
+        { id: 12, name: "В-10 кВ (малооливний)", requiresLength: false, requiresQuantity: false },
+        { id: 13, name: "В-10 кВ (вакуумний)", requiresLength: false, requiresQuantity: false },
+        { id: 14, name: "АВ-0,38 кВ", requiresLength: false, requiresQuantity: false },
+        { id: 15, name: "ЕД 6-10 кВ", requiresLength: false, requiresQuantity: false },
+        { id: 16, name: "ЕД 0,38 кВ", requiresLength: false, requiresQuantity: false }
+    ];
+
+
+    const levers = [
+        { id: 11, name: "В-110 кВ (елегазовий)" },
+        { id: 12, name: "В-10 кВ (малооливний)" },
+        { id: 13, name: "В-10 кВ (вакуумний)" }
+    ];
+
+    let equipmentSlots = document.getElementById("equipmentSlots");
+    let addEquipmentBtn = document.getElementById("addEquipment");
+    let leverSelect = document.getElementById("leverSelect");
+    let calculateBtn = document.getElementById("calculate");
+    let resultDiv = document.getElementById("result");
+
+
+    levers.forEach(lever => {
+        let option = document.createElement("option");
+        option.value = lever.id;
+        option.textContent = lever.name;
+        leverSelect.appendChild(option);
+    });
+
+    // Додавання обладнання
+    addEquipmentBtn.addEventListener("click", function () {
+        let slot = document.createElement("div");
+        slot.classList.add("equipment-slot");
+
+        let select = document.createElement("select");
+        select.innerHTML = `<option value="">Оберіть обладнання</option>`;
+        equipmentData.forEach(eq => {
+            select.innerHTML += `<option value="${eq.id}" data-length="${eq.requiresLength}" data-quantity="${eq.requiresQuantity}">${eq.name}</option>`;
+        });
+
+        let inputLength = document.createElement("input");
+        inputLength.type = "number";
+        inputLength.placeholder = "Введіть довжину (км)";
+        inputLength.classList.add("hidden");
+
+        let inputQuantity = document.createElement("input");
+        inputQuantity.type = "number";
+        inputQuantity.placeholder = "Введіть кількість";
+        inputQuantity.classList.add("hidden");
+
+        let removeBtn = document.createElement("button");
+        removeBtn.textContent = "Видалити";
+        removeBtn.onclick = function () {
+            equipmentSlots.removeChild(slot);
+        };
+
+        select.addEventListener("change", function () {
+            let selectedOption = select.options[select.selectedIndex];
+            let requiresLength = selectedOption.getAttribute("data-length") === "true";
+            let requiresQuantity = selectedOption.getAttribute("data-quantity") === "true";
+
+            inputLength.classList.toggle("hidden", !requiresLength);
+            inputQuantity.classList.toggle("hidden", !requiresQuantity);
+        });
+
+        slot.appendChild(select);
+        slot.appendChild(inputLength);
+        slot.appendChild(inputQuantity);
+        slot.appendChild(removeBtn);
+        equipmentSlots.appendChild(slot);
+    });
+
+
+    calculateBtn.addEventListener("click", function () {
+        let selectedEquipment = [];
+
+        document.querySelectorAll(".equipment-slot").forEach(slot => {
+            let select = slot.querySelector("select");
+            let inputLength = slot.querySelector("input[type='number']:nth-of-type(1)");
+            let inputQuantity = slot.querySelector("input[type='number']:nth-of-type(2)");
+
+            if (select.value) {
+                let equipment = { id: parseInt(select.value) };
+                if (!inputLength.classList.contains("hidden")) equipment.length = parseFloat(inputLength.value) || 1;
+                if (!inputQuantity.classList.contains("hidden")) equipment.quantity = parseInt(inputQuantity.value) || 1;
+                selectedEquipment.push(equipment);
+            }
+        });
+
+        let requestData = {
+            equipment: selectedEquipment,
+            lever: parseInt(leverSelect.value)
+        };
+
+        fetch("/calculate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.innerHTML = `
+                <b>Одноколова система:</b> Частота відмов: ${data.singleOmega.toFixed(6)}<br> Середній час відновлення: ${data.singleTB.toFixed(2)} год<br> Коеф. аварійного простою: ${data.singleKa.toFixed(6)}<br> Коеф. планового простою: ${data.singleKp.toFixed(6)}<br>
+                <b>Двоколова система:</b> Частота відмов двох кіл: ${data.doubleOmega.toFixed(6)}<br> Частота відмов з вимикачем: ${data.doubleOmegaWithSW.toFixed(6)}<br>
+                <b>Висновок:</b> ${data.conclusion}`;
+            });
+    });
+</script>
+
+</body>
+</html>

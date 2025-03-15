@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Розрахунок надійності</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      color: #ed95ad;
+      display: block;
+      margin-top: 10px;
+      text-align: left;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      background: #ed95ad;
+      color: white;
+      border: none;
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ff4081;
+    }
+    .result-block {
+      margin-top: 20px;
+      text-align: left;
+      word-wrap: break-word;
+      white-space: normal;
+      overflow-wrap: break-word;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Розрахунок надійності</h1>
+
+  <form action="/calculate" method="POST">
+    <label>Частота відмов (ω, 1/рік):</label>
+    <input type="text" name="omega" required value="{{.Omega}}">
+
+    <label>Середній час відновлення (tB, год.):</label>
+    <input type="text" name="tB" required value="{{.TB}}">
+
+    <label>Потужність навантаження (PM, кВт):</label>
+    <input type="text" name="pM" required value="{{.PM}}">
+
+    <label>Коефіцієнт планового простою (kP, 1/рік):</label>
+    <input type="text" name="kp" required value="{{.KP}}">
+
+    <label>Час роботи системи (T_M, роки):</label>
+    <input type="text" name="tM" required value="{{.TM}}">
+
+    <label>Питомі збитки при аварійних відключеннях (грн/кВт-год):</label>
+    <input type="text" name="zPerA" required value="{{.ZPerA}}">
+
+    <label>Питомі збитки при планових відключеннях (грн/кВт-год):</label>
+    <input type="text" name="zPerP" required value="{{.ZPerP}}">
+
+    <button type="submit">Розрахувати</button>
+  </form>
+
+  {{if .Result}}
+  <h3>Результати:</h3>
+  <div class="result-block">
+
+    <p>{{.Result}}</p>
+  </div>
+  {{end}}
+</div>
+</body>
+</html>
